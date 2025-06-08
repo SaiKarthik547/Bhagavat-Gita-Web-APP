@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bhagavad Gita: Krishna and Arjuna</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-image: url('background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #0f0f0f;
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        .character-img {
+            transition: transform 0.3s ease-in-out;
+        }
+        .character-img:hover {
+            transform: translateX(10px) scale(1.2);
+        }
+        .enlarge {
+            transform: scale(1.3);
+            transition: transform 0.3s ease-in-out;
+        }
+        .container {
+            background-color: rgba(224, 245, 116, 0.396);
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 800px;
+            width: 100%;
+        }
+        select, button {
+            background-color: #749be074;
+            color: rgb(15, 15, 15);
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .dialogue-item {
+            margin: 10px 0;
+        }
+        .speaker {
+            font-weight: bold;
+            color: #ffd700;
+        }
+        .slide-in {
+            transform: translateX(50px);
+            opacity: 0;
+            animation: slideIn 0.5s ease-in-out forwards;
+        }
+        @keyframes slideIn {
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        .krishna-glow {
+            text-shadow: 0 0 10px #00CED1, 0 0 20px #00CED1;
+        }
+        .arjuna-glow {
+            text-shadow: 0 0 10px #FF4500, 0 0 20px #FF4500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 id="headerTitle" class="text-3xl font-bold text-center mb-4">Bhagavad Gita: Krishna and Arjuna</h1>
+
+        <!-- Language Selection -->
+        <div class="mb-6">
+            <button id="langEnglish" class="px-4 py-2 bg-blue-600 hover:bg-blue-700">English</button>
+            <button id="langHindi" class="px-4 py-2 bg-blue-600 hover:bg-blue-700">Hindi</button>
+        </div>
+
+        <!-- Chapter Selection -->
+        <div class="mb-6">
+            <select id="chapterSelect" class="w-full">
+                <option value="">Select a Chapter</option>
+                <option value="1">Chapter 1: Arjuna Vishada Yoga</option>
+                <option value="2">Chapter 2: Sankhya Yoga</option>
+                <option value="3">Chapter 3: Karma Yoga</option>
+                <option value="4">Chapter 4: Jnana Karma Sanyasa Yoga</option>
+                <option value="5">Chapter 5: Karma Sanyasa Yoga</option>
+                <option value="6">Chapter 6: Dhyana Yoga</option>
+                <option value="7">Chapter 7: Jnana Vijnana Yoga</option>
+                <option value="8">Chapter 8: Akshara Brahma Yoga</option>
+                <option value="9">Chapter 9: Raja Vidya Raja Guhya Yoga</option>
+                <option value="10">Chapter 10: Vibhuti Yoga</option>
+                <option value="11">Chapter 11: Vishvarupa Darshana Yoga</option>
+                <option value="12">Chapter 12: Bhakti Yoga</option>
+                <option value="13">Chapter 13: Kshetra Kshetrajna Vibhaga Yoga</option>
+                <option value="14">Chapter 14: Gunatraya Vibhaga Yoga</option>
+                <option value="15">Chapter 15: Purushottama Yoga</option>
+                <option value="16">Chapter 16: Daivasura Sampad Vibhaga Yoga</option>
+                <option value="17">Chapter 17: Shraddhatraya Vibhaga Yoga</option>
+                <option value="18">Chapter 18: Moksha Sanyasa Yoga</option>
+            </select>
+        </div>
+
+        <!-- Character Images -->
+        <div class="flex justify-around mb-6">
+            <div class="text-center">
+                <img id="krishnaImg" src="krishna.jpg" alt="Lord Krishna" class="character-img w-32 h-32 object-cover rounded-lg" />
+                <p id="krishnaName" class="mt-2">Lord Krishna</p>
+            </div>
+            <div class="text-center">
+                <img id="arjunaImg" src="arjuna.jpg" alt="Arjuna" class="character-img w-32 h-32 object-cover rounded-lg" />
+                <p id="arjunaName" class="mt-2">Arjuna</p>
+            </div>
+        </div>
+
+        <!-- Q&A Section -->
+        <div id="chapterContent" class="mb-6">
+            <h2 id="dialogueTitle" class="text-xl font-semibold">Q&A</h2>
+            <div id="conversation" class="mt-2">Select a chapter to start the Q&A between Krishna and Arjuna.</div>
+        </div>
+
+        <!-- Interaction Section -->
+        <div class="flex flex-col items-center">
+            <button id="askQuestionBtn" class="px-4 py-2 bg-green-600 hover:bg-green-700 mt-2" disabled>Ask Question</button>
+            <button id="answerBtn" class="px-4 py-2 bg-green-600 hover:bg-green-700 mt-2" disabled>Answer</button>
+            <button id="playAudioBtn" onclick="playAudio()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700">Play Audio</button>
+            <button onclick="stopAudio()" class="px-4 py-2 bg-red-600 hover:bg-red-700">Stop Audio</button>
+            
+        </div>
+    </div>
+
+    <script>
+        // Chapter data
+        const data = {
+            en: {
+                headerTitle: 'Bhagavad Gita: Krishna and Arjuna',
+                dialogueTitle: 'Q&A',
+                summaryTitle: 'Chapter Summary',
+                teachingsTitle: 'Krishna\'s Teachings',
+                krishnaName: 'Lord Krishna',
+                arjunaName: 'Arjuna',
+                askQuestionBtn: 'Ask Question',
+                answerBtn: 'Answer',
+                playAudioBtn: 'Play Audio',
+                nextChapterBtn: 'Next',
+                chapters: {
+          1: {
+            name: 'Chapter 1: Arjuna Vishada Yoga',
+            dialogue: [
+              { speaker: 'Arjuna', text: 'O Krishna, seeing my kinsmen ready for battle, my limbs falter, and my heart trembles. How can I fight my own family?' },
+              { speaker: 'Krishna', text: 'Grieve not, Arjuna. The soul is eternal, never born nor does it die. These bodies are temporary; perform your duty as a warrior.' },
+              { speaker: 'Arjuna', text: 'How can I slay revered elders like Bhishma and Drona? Is it not better to live as a beggar?' },
+              { speaker: 'Krishna', text: 'You lament for what is not worthy of grief. The wise do not grieve for the living or the dead. Fight for righteousness.' },
+              { speaker: 'Arjuna', text: 'My mind is clouded with sorrow. What is the use of victory stained with blood?' },
+              { speaker: 'Krishna', text: 'Your duty is to act, not to be attached to results. Perform your role without fear of sin.' },
+              { speaker: 'Arjuna', text: 'Why should I engage in this dreadful war?' },
+              { speaker: 'Krishna', text: 'By avoiding your duty, you incur disgrace. Act with courage, for this is the path of a warrior.' },
+              { speaker: 'Arjuna', text: 'How can I find peace in such a conflict?' },
+              { speaker: 'Krishna', text: 'Seek wisdom beyond the material. The soul’s eternal nature brings peace when you act selflessly.' },
+              { speaker: 'Arjuna', text: 'What will happen if I refuse to fight?' },
+              { speaker: 'Krishna', text: 'You will lose your honor and fail your purpose. Stand up and fight with resolve.' }
+            ],
+            summary: 'Arjuna is overwhelmed by sorrow and moral confusion on the battlefield of Kurukshetra, seeing his relatives, teachers, and friends ready to fight. He questions the morality of the war and lays down his weapons, seeking Krishna’s guidance.',
+            teachings: 'Krishna introduces the eternal soul, urging Arjuna to rise above emotional attachments and perform his duty as a warrior without attachment to results.'
+          },
+          2: {
+            name: 'Chapter 2: Sankhya Yoga',
+            dialogue: [
+              { speaker: 'Arjuna', text: 'Krishna, my heart is heavy with pity. Instruct me as your disciple.' },
+              { speaker: 'Krishna', text: 'The wise lament neither for the living nor the dead. The soul changes bodies like clothes. Act with detachment.' },
+              { speaker: 'Arjuna', text: 'How can I fight without being swayed by emotions?' },
+              { speaker: 'Krishna', text: 'Practice yoga, the art of selfless action, to attain equanimity.' },
+              { speaker: 'Arjuna', text: 'What is the nature of a person established in wisdom?' },
+              { speaker: 'Krishna', text: 'They are steady, free from desire and anger, seeing all beings equally.' },
+              { speaker: 'Arjuna', text: 'How does one achieve such stability?' },
+              { speaker: 'Krishna', text: 'By controlling the senses and mind, fixing them on the eternal.' },
+              { speaker: 'Arjuna', text: 'What happens if I am attached to results?' },
+              { speaker: 'Krishna', text: 'Attachment leads to bondage. Act selflessly to be free.' },
+              { speaker: 'Arjuna', text: 'How can I overcome my confusion?' },
+              { speaker: 'Krishna', text: 'Seek knowledge of the soul and surrender to divine wisdom.' }
+            ],
+            summary: 'Krishna explains the immortality of the soul, the importance of selfless duty, and introduces karma-yoga, emphasizing the qualities of a stable-minded person.',
+            teachings: 'The soul is eternal, and selfless action leads to liberation. Stability comes from detachment and equal vision.'
+          },
+          3: {
+            name: 'Chapter 3: Karma Yoga',
+            dialogue: [
+              { speaker: 'Arjuna', text: 'If knowledge is superior, why urge me to fight?' },
+              { speaker: 'Krishna', text: 'No one can remain inactive. Perform selfless duties, as action is better than inaction.' },
+              { speaker: 'Arjuna', text: 'What binds one to sinful actions?' },
+              { speaker: 'Krishna', text: 'Desire and anger, born of passion, bind the soul. Control them through discipline.' },
+              { speaker: 'Arjuna', text: 'How can I act without desire?' },
+              { speaker: 'Krishna', text: 'Offer your actions to the Divine, acting without attachment.' },
+              { speaker: 'Arjuna', text: 'What is the benefit of selfless action?' },
+              { speaker: 'Krishna', text: 'It purifies the mind and leads to liberation.' },
+              { speaker: 'Arjuna', text: 'Why do people act selfishly?' },
+              { speaker: 'Krishna', text: 'Ignorance clouds their understanding, leading to attachment.' },
+              { speaker: 'Arjuna', text: 'How can I avoid such ignorance?' },
+              { speaker: 'Krishna', text: 'Follow the scriptures and act with wisdom.' }
+            ],
+            summary: 'Krishna elaborates on karma-yoga, emphasizing selfless action, the necessity of duty, and controlling desire and anger.',
+            teachings: 'Selfless action purifies the mind, and discipline over desire leads to spiritual growth.'
+          },
+          4: {
+            name: 'Chapter 4: Jnana Karma Sanyasa Yoga',
+            dialogue: [
+              { speaker: 'Arjuna', text: 'How can you have taught this yoga in ancient times?' },
+              { speaker: 'Krishna', text: 'I am eternal, appearing in many births to restore dharma.' },
+              { speaker: 'Arjuna', text: 'What is the purpose of your incarnations?' },
+              { speaker: 'Krishna', text: 'To protect the righteous and destroy the wicked.' },
+              { speaker: 'Arjuna', text: 'How does action relate to knowledge?' },
+              { speaker: 'Krishna', text: 'Action with knowledge of the Divine is liberating.' },
+              { speaker: 'Arjuna', text: 'Why do some not seek you?' },
+              { speaker: 'Krishna', text: 'Ignorance covers their wisdom, like smoke covers fire.' },
+              { speaker: 'Arjuna', text: 'How can I gain true knowledge?' },
+              { speaker: 'Krishna', text: 'Approach a realized teacher with humility.' },
+              { speaker: 'Arjuna', text: 'What is the result of such knowledge?' },
+              { speaker: 'Krishna', text: 'It burns all karma, like fire reduces wood to ashes.' }
+            ],
+            summary: 'Krishna reveals the divine origin of the Gita’s teachings and the importance of combining knowledge with action.',
+            teachings: 'Knowledge and selfless action together lead to liberation.'
+          },
+          5: {
+            name: 'Chapter 5: Karma Sanyasa Yoga',
+            dialogue: [
+              { speaker: 'Arjuna', text: 'Is renunciation or action better?' },
+              { speaker: 'Krishna', text: 'Both lead to liberation, but selfless action is easier.' },
+              { speaker: 'Arjuna', text: 'How can action equal renunciation?' },
+              { speaker: 'Krishna', text: 'By acting without attachment, one achieves the same goal.' },
+              { speaker: 'Arjuna', text: 'Who is a true renunciate?' },
+              { speaker: 'Krishna', text: 'One who acts without desire, offering results to me.' },
+              { speaker: 'Arjuna', text: 'How does one remain unaffected?' },
+              { speaker: 'Krishna', text: 'By seeing all actions as divine, performed in my service.' },
+              { speaker: 'Arjuna', text: 'What is the state of such a person?' },
+              { speaker: 'Krishna', text: 'They are peaceful, seeing the self in all beings.' },
+              { speaker: 'Arjuna', text: 'How can I attain this peace?' },
+              { speaker: 'Krishna', text: 'Fix your mind on me and act selflessly.' }
+            ],
+            summary: 'Krishna explains the harmony between renunciation and selfless action, emphasizing equanimity.',
+            teachings: 'True renunciation is acting without attachment, leading to peace.'
+          },
+          6: {
+            name: 'Chapter 6: Dhyana Yoga',
+            dialogue: [
+              { speaker: 'Arjuna', text: 'Who is a true yogi?' },
+              { speaker: 'Krishna', text: 'One who controls the mind and senses, fixed on the self.' },
+              { speaker: 'Arjuna', text: 'How can I control my restless mind?' },
+              { speaker: 'Krishna', text: 'Through practice and detachment, like taming a horse.' },
+              { speaker: 'Arjuna', text: 'What if I fail in yoga?' },
+              { speaker: 'Krishna', text: 'No effort is lost; you progress in future lives.' },
+              { speaker: 'Arjuna', text: 'What is the goal of meditation?' },
+              { speaker: 'Krishna', text: 'To see the self and attain union with me.' },
+              { speaker: 'Arjuna', text: 'How can I meditate effectively?' },
+              { speaker: 'Krishna', text: 'Sit in a quiet place, focus your mind, and regulate your breath.' },
+              { speaker: 'Arjuna', text: 'What is the highest state of yoga?' },
+              { speaker: 'Krishna', text: 'Seeing me in all beings and all beings in me.' }
+            ],
+            summary: 'Krishna describes the path of meditation and the qualities of a true yogi.',
+            teachings: 'Meditation requires discipline, detachment, and focus on the Divine.'
+          },
+          7: {
+            name: 'Chapter 7: Jnana Vijnana Yoga',
+            dialogue: [
+              { speaker: 'Arjuna', text: 'What is the Absolute Truth?' },
+              { speaker: 'Krishna', text: 'I am the Supreme Truth, the source of all.' },
+              { speaker: 'Arjuna', text: 'How do you pervade creation?' },
+              { speaker: 'Krishna', text: 'I am the essence of everything, like the taste in water.' },
+              { speaker: 'Arjuna', text: 'Why do some not know you?' },
+              { speaker: 'Krishna', text: 'My divine energy, maya, veils their understanding.' },
+              { speaker: 'Arjuna', text: 'Who knows you truly?' },
+              { speaker: 'Krishna', text: 'Those who surrender to me with devotion.' },
+              { speaker: 'Arjuna', text: 'What are the types of devotees?' },
+              { speaker: 'Krishna', text: 'Four kinds worship me, but the wise devotee is dearest.' },
+              { speaker: 'Arjuna', text: 'How can I know you fully?' },
+              { speaker: 'Krishna', text: 'Through devotion and knowledge, you realize my nature.' }
+            ],
+            summary: 'Krishna describes His all-pervading nature and the rarity of true devotees.',
+            teachings: 'True knowledge leads to devotion, which reveals the Supreme.'
+          },
+          8: {
+            name: 'Chapter 8: Akshara Brahma Yoga',
+            dialogue: [
+              { speaker: 'Arjuna', text: 'What is Brahman, and what is the self?' },
+              { speaker: 'Krishna', text: 'Brahman is the eternal; the self is the soul within.' },
+              { speaker: 'Arjuna', text: 'What happens at the time of death?' },
+              { speaker: 'Krishna', text: 'Those who remember me attain me; others return to birth.' },
+              { speaker: 'Arjuna', text: 'What are the paths after death?' },
+              { speaker: 'Krishna', text: 'The path of light leads to liberation; darkness to rebirth.' },
+              { speaker: 'Arjuna', text: 'How can I remember you at death?' },
+              { speaker: 'Krishna', text: 'Practice constant devotion throughout life.' },
+              { speaker: 'Arjuna', text: 'What is the imperishable goal?' },
+              { speaker: 'Krishna', text: 'It is my supreme abode, beyond the material.' },
+              { speaker: 'Arjuna', text: 'How can I attain it?' },
+              { speaker: 'Krishna', text: 'Fix your mind on me always.' }
+            ],
+            summary: 'Krishna explains the process of dying, the soul’s destination, and the importance of remembering God.',
+            teachings: 'Constant devotion ensures liberation at the time of death.'
+          },
+          9: {
+            name: 'Chapter 9: Raja Vidya Raja Guhya Yoga',
+            dialogue: [
+              { speaker: 'Arjuna', text: 'What is the most confidential knowledge?' },
+              { speaker: 'Krishna', text: 'Knowing me as the Supreme, served with devotion.' },
+              { speaker: 'Arjuna', text: 'How are you related to all beings?' },
+              { speaker: 'Krishna', text: 'I am their source, sustainer, and ultimate goal.' },
+              { speaker: 'Arjuna', text: 'Why do some not worship you?' },
+              { speaker: 'Krishna', text: 'Ignorance leads them to worship lesser forms.' },
+              { speaker: 'Arjuna', text: 'What is the benefit of devotion?' },
+              { speaker: 'Krishna', text: 'My devotees attain me, free from rebirth.' },
+              { speaker: 'Arjuna', text: 'How should I worship you?' },
+              { speaker: 'Krishna', text: 'Offer all actions to me with love.' },
+              { speaker: 'Arjuna', text: 'Is devotion easy for all?' },
+              { speaker: 'Krishna', text: 'Even the simplest can reach me with sincere devotion.' }
+            ],
+            summary: 'Krishna reveals the supremacy of bhakti and His loving relationship with all beings.',
+            teachings: 'Bhakti is the most direct path to God, accessible to all.'
+          },
+          10: {
+            name: 'Chapter 10: Vibhuti Yoga',
+            dialogue: [
+              { speaker: 'Arjuna', text: 'How can I know your divine glories?' },
+              { speaker: 'Krishna', text: 'I am the source of all; know my opulences.' },
+              { speaker: 'Arjuna', text: 'What are your divine manifestations?' },
+              { speaker: 'Krishna', text: 'I am the sun among luminaries, the lion among beasts.' },
+              { speaker: 'Arjuna', text: 'Why do you manifest thus?' },
+              { speaker: 'Krishna', text: 'To inspire devotion and establish dharma.' },
+              { speaker: 'Arjuna', text: 'Can you describe more of your glories?' },
+              { speaker: 'Krishna', text: 'I am the beginning, middle, and end of creation.' },
+              { speaker: 'Arjuna', text: 'How can I meditate on you?' },
+              { speaker: 'Krishna', text: 'See me in all beings and phenomena.' },
+              { speaker: 'Arjuna', text: 'What is the extent of your presence?' },
+              { speaker: 'Krishna', text: 'There is nothing beyond me; all exists within me.' }
+            ],
+            summary: 'Krishna describes His divine manifestations throughout creation.',
+            teachings: 'God’s opulence is visible in all creation, inspiring devotion.'
+          },
+          11: {
+            name: 'Chapter 11: Vishvarupa Darshana Yoga',
+            dialogue: [
+              { speaker: 'Arjuna', text: 'Can I see your universal form?' },
+              { speaker: 'Krishna', text: 'Behold my cosmic form, but with divine eyes.' },
+              { speaker: 'Arjuna', text: 'I am awestruck! What is this form?' },
+              { speaker: 'Krishna', text: 'I am time, the destroyer of all worlds.' },
+              { speaker: 'Arjuna', text: 'Why do I see all beings within you?' },
+              { speaker: 'Krishna', text: 'All creation exists within me; I am the Supreme.' },
+              { speaker: 'Arjuna', text: 'I am fearful; show me your gentle form.' },
+              { speaker: 'Krishna', text: 'Return to my human form, Arjuna; be at peace.' },
+              { speaker: 'Arjuna', text: 'How can one see this form?' },
+              { speaker: 'Krishna', text: 'Through unwavering devotion to me.' },
+              { speaker: 'Arjuna', text: 'What is the benefit of seeing it?' },
+              { speaker: 'Krishna', text: 'It deepens devotion and grants divine vision.' }
+            ],
+            summary: 'Krishna grants Arjuna divine vision to behold His cosmic form, revealing His supreme power.',
+            teachings: 'God’s universal form encompasses all existence, seen through devotion.'
+          },
+          12: {
+            name: 'Chapter 12: Bhakti Yoga',
+            dialogue: [
+              { speaker: 'Arjuna', text: 'Who is dearer, the devotee of form or formless?' },
+              { speaker: 'Krishna', text: 'Those who worship me with devotion are dearest.' },
+              { speaker: 'Arjuna', text: 'How should I practice devotion?' },
+              { speaker: 'Krishna', text: 'Fix your mind on me, or offer all actions to me.' },
+              { speaker: 'Arjuna', text: 'What if I cannot focus my mind?' },
+              { speaker: 'Krishna', text: 'Practice selfless action or chant my names.' },
+              { speaker: 'Arjuna', text: 'What are the qualities of a devotee?' },
+              { speaker: 'Krishna', text: 'They are kind, equanimous, and devoted to me.' },
+              { speaker: 'Arjuna', text: 'Is devotion superior to other paths?' },
+              { speaker: 'Krishna', text: 'Yes, it is the simplest and most direct path.' },
+              { speaker: 'Arjuna', text: 'Can all follow this path?' },
+              { speaker: 'Krishna', text: 'Anyone with faith can attain me through devotion.' }
+            ],
+            summary: 'Krishna details the qualities of devotees and the superiority of bhakti.',
+            teachings: 'Loving devotion surpasses all paths, accessible to all.'
+          },
+          13: {
+            name: 'Chapter 13: Kshetra Kshetrajna Vibhaga Yoga',
+            dialogue: [
+              { speaker: 'Arjuna', text: 'What is the field and the knower?' },
+              { speaker: 'Krishna', text: 'The body is the field; the soul is the knower.' },
+              { speaker: 'Arjuna', text: 'What is the Supersoul?' },
+              { speaker: 'Krishna', text: 'I am the Supersoul, residing in all hearts.' },
+              { speaker: 'Arjuna', text: 'How can I know the field?' },
+              { speaker: 'Krishna', text: 'Through humility, detachment, and discipline.' },
+              { speaker: 'Arjuna', text: 'What is true knowledge?' },
+              { speaker: 'Krishna', text: 'Seeing the distinction between body and soul.' },
+              { speaker: 'Arjuna', text: 'What binds the soul to the body?' },
+              { speaker: 'Krishna', text: 'Attachment to the modes of nature.' },
+              { speaker: 'Arjuna', text: 'How can I transcend this?' },
+              { speaker: 'Krishna', text: 'Realize the Supersoul through devotion.' }
+            ],
+            summary: 'Krishna explains the distinction between the body, soul, and Supersoul.',
+            teachings: 'True knowledge discerns the soul from the body, attained through devotion.'
+          },
+          14: {
+            name: 'Chapter 14: Gunatraya Vibhaga Yoga',
+            dialogue: [
+              { speaker: 'Arjuna', text: 'What are the modes of nature?' },
+              { speaker: 'Krishna', text: 'Goodness, passion, and ignorance bind the soul.' },
+              { speaker: 'Arjuna', text: 'How do these modes affect us?' },
+              { speaker: 'Krishna', text: 'Goodness elevates, passion binds, ignorance deludes.' },
+              { speaker: 'Arjuna', text: 'How can I transcend the modes?' },
+              { speaker: 'Krishna', text: 'By devotion to me, you rise above them.' },
+              { speaker: 'Arjuna', text: 'What are the signs of transcendence?' },
+              { speaker: 'Krishna', text: 'Equanimity in all situations.' },
+              { speaker: 'Arjuna', text: 'How do the modes influence actions?' },
+              { speaker: 'Krishna', text: 'They shape desires, actions, and outcomes.' },
+              { speaker: 'Arjuna', text: 'How can I act in goodness?' },
+              { speaker: 'Krishna', text: 'Perform duties selflessly, devoted to me.' }
+            ],
+            summary: 'Krishna explains the three modes of material nature and their influence.',
+            teachings: 'Transcending the modes through devotion leads to liberation.'
+          },
+          15: {
+            name: 'Chapter 15: Purushottama Yoga',
+            dialogue: [
+              { speaker: 'Arjuna', text: 'What is the nature of this world?' },
+              { speaker: 'Krishna', text: 'It is like an inverted banyan tree, rooted in me.' },
+              { speaker: 'Arjuna', text: 'How can I detach from it?' },
+              { speaker: 'Krishna', text: 'Cut the tree with the axe of detachment.' },
+              { speaker: 'Arjuna', text: 'Who is the Supreme Person?' },
+              { speaker: 'Krishna', text: 'I am the Supreme Person, beyond the perishable.' },
+              { speaker: 'Arjuna', text: 'How can I reach you?' },
+              { speaker: 'Krishna', text: 'Surrender to me with unwavering devotion.' },
+              { speaker: 'Arjuna', text: 'What are the two types of beings?' },
+              { speaker: 'Krishna', text: 'Perishable souls and the eternal Supersoul.' },
+              { speaker: 'Arjuna', text: 'Why is this knowledge supreme?' },
+              { speaker: 'Krishna', text: 'It leads to liberation and union with me.' }
+            ],
+            summary: 'Krishna uses the metaphor of the banyan tree to describe the material world’s illusory nature.',
+            teachings: 'Detach from the material and surrender to the Supreme Person.'
+          },
+          16: {
+            name: 'Chapter 16: Daivasura Sampad Vibhaga Yoga',
+            dialogue: [
+              { speaker: 'Arjuna', text: 'What are divine qualities?' },
+              { speaker: 'Krishna', text: 'Fearlessness, purity, and devotion lead to liberation.' },
+              { speaker: 'Arjuna', text: 'What are demoniac qualities?' },
+              { speaker: 'Krishna', text: 'Pride, anger, and ignorance lead to bondage.' },
+              { speaker: 'Arjuna', text: 'How do these qualities manifest?' },
+              { speaker: 'Krishna', text: 'Divine seek me; demoniac pursue selfish desires.' },
+              { speaker: 'Arjuna', text: 'What is the fate of the demoniac?' },
+              { speaker: 'Krishna', text: 'They fall into lower states of existence.' },
+              { speaker: 'Arjuna', text: 'How can I cultivate divine qualities?' },
+              { speaker: 'Krishna', text: 'Follow scriptures and practice devotion.' },
+              { speaker: 'Arjuna', text: 'Why do some choose demoniac ways?' },
+              { speaker: 'Krishna', text: 'Ignorance and illusion cloud their judgment.' }
+            ],
+            summary: 'Krishna contrasts divine and demoniac natures and their outcomes.',
+            teachings: 'Divine qualities lead to liberation; demoniac to bondage.'
+          },
+          17: {
+            name: 'Chapter 17: Shraddhatraya Vibhaga Yoga',
+            dialogue: [
+              { speaker: 'Arjuna', text: 'What is faith without scriptures?' },
+              { speaker: 'Krishna', text: 'It is shaped by the three modes of nature.' },
+              { speaker: 'Arjuna', text: 'How do the modes affect faith?' },
+              { speaker: 'Krishna', text: 'Goodness leads to purity, passion to desire, ignorance to delusion.' },
+              { speaker: 'Arjuna', text: 'What are acts in goodness?' },
+              { speaker: 'Krishna', text: 'Worship, charity, and austerity done selflessly.' },
+              { speaker: 'Arjuna', text: 'What about acts in passion?' },
+              { speaker: 'Krishna', text: 'They seek rewards and are temporary.' },
+              { speaker: 'Arjuna', text: 'And acts in ignorance?' },
+              { speaker: 'Krishna', text: 'They harm and lack wisdom.' },
+              { speaker: 'Arjuna', text: 'How can I act in goodness?' },
+              { speaker: 'Krishna', text: 'Align your faith with scriptures and devotion.' }
+            ],
+            summary: 'Krishna categorizes faith and practices according to the three modes.',
+            teachings: 'Faith in goodness elevates the soul through scriptural adherence.'
+          },
+          18: {
+            name: 'Chapter 18: Moksha Sanyasa Yoga',
+            dialogue: [
+              { speaker: 'Arjuna', text: 'What is true renunciation?' },
+              { speaker: 'Krishna', text: 'Giving up selfish actions, not duty itself.' },
+              { speaker: 'Arjuna', text: 'What motivates action?' },
+              { speaker: 'Krishna', text: 'Knowledge, the doer, and desire drive actions.' },
+              { speaker: 'Arjuna', text: 'How can I act correctly?' },
+              { speaker: 'Krishna', text: 'Act according to your nature, guided by me.' },
+              { speaker: 'Arjuna', text: 'What leads to liberation?' },
+              { speaker: 'Krishna', text: 'Surrender all actions to me with devotion.' },
+              { speaker: 'Arjuna', text: 'What if I doubt your words?' },
+              { speaker: 'Krishna', text: 'Reflect on my teachings and act with faith.' },
+              { speaker: 'Arjuna', text: 'What is my duty now?' },
+              { speaker: 'Krishna', text: 'Abandon all doubts and surrender to me fully.' }
+            ],
+            summary: 'Krishna summarizes all teachings, urging Arjuna to surrender to divine will for liberation.',
+            teachings: 'Surrender to God grants liberation through selfless action and devotion.'
+          }
+        }
+      },
+      hi: {
+        headerTitle: 'भगवद् गीता: कृष्ण और अर्जुन',
+        dialogueTitle: 'संवाद',
+        summaryTitle: 'अध्याय सार',
+        teachingsTitle: 'कृष्ण की शिक्षाएँ',
+        krishnaName: 'भगवान कृष्ण',
+        arjunaName: 'अर्जुन',
+        askQuestionBtn: 'प्रश्न पूछें',
+        answerBtn: 'उत्तर',
+        playAudioBtn: 'Play Audio',
+        chapters: {
+          1: {
+            name: 'अध्याय 1: अर्जुन विषाद योग',
+            dialogue: [
+              { speaker: 'Arjuna', text: 'हे कृष्ण, अपने कुटुंबियों को युद्ध के लिए तैयार देख, मेरे अंग काँप रहे हैं। मैं अपने परिवार से कैसे लड़ सकता हूँ?' },
+              { speaker: 'Krishna', text: 'अर्जुन, शोक मत करो। आत्मा अनंत है, न जन्म लेती है न मरती है। शरीर अस्थायी है; योद्धा के कर्तव्य को निभाओ।' },
+              { speaker: 'Arjuna', text: 'भीष्म और द्रोण जैसे गुरुओं को मारना कैसे संभव है? भिक्षु बनना बेहतर नहीं है?' },
+              { speaker: 'Krishna', text: 'तुम व्यर्थ शोक करते हो। बुद्धिमान जीवित या मृत के लिए शोक नहीं करते। धर्म के लिए युद्ध करो।' },
+              { speaker: 'Arjuna', text: 'मेरा मन दुख से भरा है। इस रक्तरंजित विजय का क्या लाभ?' },
+              { speaker: 'Krishna', text: 'तुम्हारा कर्तव्य कर्म करना है, फल की चिंता नहीं। निष्काम कर्म करो।' },
+              { speaker: 'Arjuna', text: 'यह भयानक युद्ध क्यों करूँ?' },
+              { speaker: 'Krishna', text: 'कर्तव्य से भागने से अपमान होगा। साहस के साथ युद्ध करो।' },
+              { speaker: 'Arjuna', text: 'इस संघर्ष में शांति कैसे पाऊँ?' },
+              { speaker: 'Krishna', text: 'भौतिक से परे ज्ञान प्राप्त करो। आत्मा की अनंतता शांति देती है।' },
+              { speaker: 'Arjuna', text: 'यदि मैं युद्ध न करूँ तो क्या होगा?' },
+              { speaker: 'Krishna', text: 'तुम सम्मान खो दोगे और अपने उद्देश्य में असफल होगे।' }
+            ],
+            summary: 'कुरुक्षेत्र के युद्धक्षेत्र में अर्जुन अपने कुटुंबियों और गुरुओं को देखकर दुखी और भ्रमित होकर हथियार डाल देता है और कृष्ण से मार्गदर्शन माँगता है।',
+            teachings: 'कृष्ण आत्मा की अनंतता का परिचय देते हैं और अर्जुन को भावनात्मक आसक्ति से ऊपर उठकर योद्धा के कर्तव्य को निभाने का आग्रह करते हैं।'
+          },
+          2: {
+            name: 'अध्याय 2: सांख्य योग',
+            dialogue: [
+              { speaker: 'Arjuna', text: 'कृष्ण, मेरा हृदय करुणा से भारी है। मुझे शिष्य बनाकर मार्गदर्शन दो।' },
+              { speaker: 'Krishna', text: 'बुद्धिमान जीवित या मृत के लिए शोक नहीं करते। आत्मा वस्त्र बदलने जैसी देह बदलती है।' },
+              { speaker: 'Arjuna', text: 'भावनाओं से प्रभावित हुए बिना मैं कैसे लड़ सकता हूँ?' },
+              { speaker: 'Krishna', text: 'योग का अभ्यास करो, निष्काम कर्म से संतुलन प्राप्त होता है।' },
+              { speaker: 'Arjuna', text: 'ज्ञान में स्थिर व्यक्ति की प्रकृति क्या है?' },
+              { speaker: 'Krishna', text: 'वे स्थिर, इच्छा और क्रोध से मुक्त, और सभी को समान देखते हैं।' },
+              { speaker: 'Arjuna', text: 'ऐसी स्थिरता कैसे प्राप्त करें?' },
+              { speaker: 'Krishna', text: 'इंद्रियों और मन को नियंत्रित कर, अनंत पर ध्यान दो।' },
+              { speaker: 'Arjuna', text: 'फल की आसक्ति का क्या परिणाम है?' },
+              { speaker: 'Krishna', text: 'आसक्ति बंधन लाती है। निष्काम कर्म से मुक्ति मिलती है।' },
+              { speaker: 'Arjuna', text: 'मेरा भ्रम कैसे दूर हो?' },
+              { speaker: 'Krishna', text: 'आत्मा का ज्ञान प्राप्त कर और दिव्य ज्ञान को समर्पित हो।' }
+            ],
+            summary: 'कृष्ण आत्मा की अमरता, निष्काम कर्तव्य, और कर्म-योग का परिचय देते हैं, साथ ही स्थिर-बुद्धि व्यक्ति के गुण बताते हैं।',
+            teachings: 'आत्मा अनंत है, और निष्काम कर्म मुक्ति की ओर ले जाता है।'
+          },
+          3: {
+            name: 'अध्याय 3: कर्म योग',
+            dialogue: [
+              { speaker: 'Arjuna', text: 'यदि ज्ञान श्रेष्ठ है, तो मुझे युद्ध क्यों करना चाहिए?' },
+              { speaker: 'Krishna', text: 'कोई निष्क्रिय नहीं रह सकता। निष्काम कर्तव्यों को करो, कर्म अकर्म से बेहतर है।' },
+              { speaker: 'Arjuna', text: 'पाप कर्मों में क्या बाँधता है?' },
+              { speaker: 'Krishna', text: 'राग और क्रोध, जो रजोगुण से उत्पन्न होते हैं, आत्मा को बाँधते हैं।' },
+              { speaker: 'Arjuna', text: 'बिना इच्छा के कर्म कैसे करूँ?' },
+              { speaker: 'Krishna', text: 'अपने कर्म मुझे समर्पित कर, बिना आसक्ति के कर्म करो।' },
+              { speaker: 'Arjuna', text: 'निष्काम कर्म का लाभ क्या है?' },
+              { speaker: 'Krishna', text: 'यह मन को शुद्ध करता है और मुक्ति की ओर ले जाता है।' },
+              { speaker: 'Arjuna', text: 'लोग स्वार्थी कर्म क्यों करते हैं?' },
+              { speaker: 'Krishna', text: 'अज्ञान उनकी समझ को ढक लेता है।' },
+              { speaker: 'Arjuna', text: 'इस अज्ञान से कैसे बचूँ?' },
+              { speaker: 'Krishna', text: 'शास्त्रों का पालन कर और बुद्धि से कर्म करो।' }
+            ],
+            summary: 'कृष्ण कर्म-योग, निष्काम कर्म की आवश्यकता, और इच्छा व क्रोध पर नियंत्रण की व्याख्या करते हैं।',
+            teachings: 'निष्काम कर्म मन को शुद्ध करता है और आध्यात्मिक उन्नति की ओर ले जाता है।'
+          },
+          4: {
+            name: 'अध्याय 4: ज्ञान कर्म संन्यास योग',
+            dialogue: [
+              { speaker: 'Arjuna', text: 'आपने प्राचीन काल में यह योग कैसे सिखाया?' },
+              { speaker: 'Krishna', text: 'मैं अनंत हूँ, धर्म की स्थापना के लिए अनेक जन्म लेता हूँ।' },
+              { speaker: 'Arjuna', text: 'आपके अवतारों का उद्देश्य क्या है?' },
+              { speaker: 'Krishna', text: 'सज्जनों की रक्षा और दुष्टों का नाश करना।' },
+              { speaker: 'Arjuna', text: 'कर्म और ज्ञान का क्या संबंध है?' },
+              { speaker: 'Krishna', text: 'दिव्य ज्ञान के साथ कर्म मुक्ति देता है।' },
+              { speaker: 'Arjuna', text: 'कुछ लोग आपको क्यों नहीं खोजते?' },
+              { speaker: 'Krishna', text: 'अज्ञान उनकी बुद्धि को ढक लेता है।' },
+              { speaker: 'Arjuna', text: 'सच्चा ज्ञान कैसे प्राप्त करूँ?' },
+              { speaker: 'Krishna', text: 'विनम्रता के साथ सिद्ध गुरु के पास जाओ।' },
+              { speaker: 'Arjuna', text: 'ऐसे ज्ञान का परिणाम क्या है?' },
+              { speaker: 'Krishna', text: 'यह कर्म को जलाकर राख कर देता है।' }
+            ],
+            summary: 'कृष्ण गीता की शिक्षाओं के दैवीय मूल और ज्ञान के साथ कर्म के महत्व को बताते हैं।',
+            teachings: 'ज्ञान और निष्काम कर्म मिलकर मुक्ति की ओर ले जाते हैं।'
+          },
+          5: {
+            name: 'अध्याय 5: कर्म संन्यास योग',
+            dialogue: [
+              { speaker: 'Arjuna', text: 'संन्यास या कर्म, कौन बेहतर है?' },
+              { speaker: 'Krishna', text: 'दोनों मुक्ति देते हैं, पर निष्काम कर्म आसान है।' },
+              { speaker: 'Arjuna', text: 'कर्म संन्यास के समान कैसे हो सकता है?' },
+              { speaker: 'Krishna', text: 'बिना आसक्ति के कर्म करने से वही लक्ष्य प्राप्त होता है।' },
+              { speaker: 'Arjuna', text: 'सच्चा संन्यासी कौन है?' },
+              { speaker: 'Krishna', text: 'जो बिना इच्छा के कर्म करता है और फल मुझे समर्पित करता है।' },
+              { speaker: 'Arjuna', text: 'प्रभावित हुए बिना कैसे रहूँ?' },
+              { speaker: 'Krishna', text: 'सभी कर्मों को मेरी सेवा में देखकर।' },
+              { speaker: 'Arjuna', text: 'ऐसे व्यक्ति की स्थिति क्या है?' },
+              { speaker: 'Krishna', text: 'वे शांत हैं, सभी प्राणियों में आत्मा देखते हैं।' },
+              { speaker: 'Arjuna', text: 'यह शांति कैसे प्राप्त करूँ?' },
+              { speaker: 'Krishna', text: 'मुझ पर मन लगाओ और निष्काम कर्म करो।' }
+            ],
+            summary: 'कृष्ण संन्यास और निष्काम कर्म के बीच सामंजस्य और समता के महत्व को समझाते हैं।',
+            teachings: 'सच्चा संन्यास बिना आसक्ति के कर्म करना है, जो शांति देता है।'
+          },
+          6: {
+            name: 'अध्याय 6: ध्यान योग',
+            dialogue: [
+              { speaker: 'Arjuna', text: 'सच्चा योगी कौन है?' },
+              { speaker: 'Krishna', text: 'जो मन और इंद्रियों को नियंत्रित कर आत्मा पर केंद्रित है।' },
+              { speaker: 'Arjuna', text: 'मेरे चंचल मन को कैसे नियंत्रित करूँ?' },
+              { speaker: 'Krishna', text: 'अभ्यास और वैराग्य से, जैसे घोड़े को वश में करते हैं।' },
+              { speaker: 'Arjuna', text: 'यदि मैं योग में असफल हो जाऊँ?' },
+              { speaker: 'Krishna', text: 'कोई प्रयास व्यर्थ नहीं; अगले जन्म में प्रगति होगी।' },
+              { speaker: 'Arjuna', text: 'ध्यान का लक्ष्य क्या है?' },
+              { speaker: 'Krishna', text: 'आत्मा को देखना और मेरे साथ एकता प्राप्त करना।' },
+              { speaker: 'Arjuna', text: 'प्रभावी ध्यान कैसे करूँ?' },
+              { speaker: 'Krishna', text: 'शांत स्थान पर बैठो, मन केंद्रित करो, और श्वास नियंत्रित करो।' },
+              { speaker: 'Arjuna', text: 'योग की उच्चतम अवस्था क्या है?' },
+              { speaker: 'Krishna', text: 'मुझे सभी प्राणियों में और सभी को मुझमें देखना।' }
+            ],
+            summary: 'कृष्ण ध्यान के मार्ग और सच्चे योगी के गुणों का वर्णन करते हैं।',
+            teachings: 'ध्यान के लिए अनुशासन, वैराग्य, और दैवीय ध्यान की आवश्यकता है।'
+          },
+          7: {
+            name: 'अध्याय 7: ज्ञान विज्ञान योग',
+            dialogue: [
+              { speaker: 'Arjuna', text: 'परम सत्य क्या है?' },
+              { speaker: 'Krishna', text: 'मैं परम सत्य हूँ, सभी का स्रोत।' },
+              { speaker: 'Arjuna', text: 'आप सृष्टि में कैसे व्याप्त हैं?' },
+              { speaker: 'Krishna', text: 'मैं हर चीज का सार हूँ, जैसे जल में स्वाद।' },
+              { speaker: 'Arjuna', text: 'कुछ लोग आपको क्यों नहीं जानते?' },
+              { speaker: 'Krishna', text: 'मेरी दैवीय माया उनकी समझ को ढक लेती है।' },
+              { speaker: 'Arjuna', text: 'आपको सच्चे रूप में कौन जानता है?' },
+              { speaker: 'Krishna', text: 'जो भक्ति के साथ मुझे समर्पित होते हैं।' },
+              { speaker: 'Arjuna', text: 'भक्तों के प्रकार क्या हैं?' },
+              { speaker: 'Krishna', text: 'चार प्रकार मुझे पूजते हैं, पर ज्ञानी भक्त मुझे प्रिय है।' },
+              { speaker: 'Arjuna', text: 'आपको पूर्ण रूप से कैसे जानूँ?' },
+              { speaker: 'Krishna', text: 'भक्ति और ज्ञान से मेरे स्वरूप को समझो।' }
+            ],
+            summary: 'कृष्ण अपने सर्वव्यापी स्वरूप और सच्चे भक्तों की दुर्लभता का वर्णन करते हैं।',
+            teachings: 'सच्चा ज्ञान भक्ति की ओर ले जाता है, जो परम को प्रकट करता है।'
+          },
+          8: {
+            name: 'अध्याय 8: अक्षर ब्रह्म योग',
+            dialogue: [
+              { speaker: 'Arjuna', text: 'ब्रह्म और आत्मा क्या है?' },
+              { speaker: 'Krishna', text: 'ब्रह्म अनंत है; आत्मा देह के भीतर की चेतना है।' },
+              { speaker: 'Arjuna', text: 'मृत्यु के समय क्या होता है?' },
+              { speaker: 'Krishna', text: 'जो मुझे स्मरण करते हैं, वे मुझे प्राप्त करते हैं।' },
+              { speaker: 'Arjuna', text: 'मृत्यु के बाद के मार्ग क्या हैं?' },
+              { speaker: 'Krishna', text: 'प्रकाश का मार्ग मुक्ति देता है; अंधकार पुनर्जनन।' },
+              { speaker: 'Arjuna', text: 'मृत्यु के समय आपको कैसे स्मरण करूँ?' },
+              { speaker: 'Krishna', text: 'जीवन भर निरंतर भक्ति का अभ्यास करो।' },
+              { speaker: 'Arjuna', text: 'अविनाशी लक्ष्य क्या है?' },
+              { speaker: 'Krishna', text: 'यह मेरा परम धाम है, भौतिक से परे।' },
+              { speaker: 'Arjuna', text: 'इसे कैसे प्राप्त करूँ?' },
+              { speaker: 'Krishna', text: 'हमेशा मुझ पर मन लगाओ।' }
+            ],
+            summary: 'कृष्ण मृत्यु की प्रक्रिया, आत्मा के गंतव्य, और ईश्वर को स्मरण करने के महत्व को समझाते हैं।',
+            teachings: 'निरंतर भक्ति मृत्यु के समय मुक्ति सुनिश्चित करती है।'
+          },
+          9: {
+            name: 'अध्याय 9: राज विद्या राज गुह्य योग',
+            dialogue: [
+              { speaker: 'Arjuna', text: 'सबसे गोपनीय ज्ञान क्या है?' },
+              { speaker: 'Krishna', text: 'मुझे परम के रूप में जानना और भक्ति से सेवा करना।' },
+              { speaker: 'Arjuna', text: 'आप सभी प्राणियों से कैसे संबंधित हैं?' },
+              { speaker: 'Krishna', text: 'मैं उनका स्रोत, पालक, और अंतिम लक्ष्य हूँ।' },
+              { speaker: 'Arjuna', text: 'कुछ लोग आपकी पूजा क्यों नहीं करते?' },
+              { speaker: 'Krishna', text: 'अज्ञान उन्हें निम्न रूपों की पूजा की ओर ले जाता है।' },
+              { speaker: 'Arjuna', text: 'भक्ति का लाभ क्या है?' },
+              { speaker: 'Krishna', text: 'मेरे भक्त मुझे प्राप्त करते हैं, पुनर्जनन से मुक्त।' },
+              { speaker: 'Arjuna', text: 'आपकी पूजा कैसे करूँ?' },
+              { speaker: 'Krishna', text: 'सभी कर्म मुझे प्रेम से समर्पित करो।' },
+              { speaker: 'Arjuna', text: 'क्या भक्ति सबके लिए आसान है?' },
+              { speaker: 'Krishna', text: 'सच्ची भक्ति से साधारण व्यक्ति भी मुझे प्राप्त कर सकता है।' }
+            ],
+            summary: 'कृष्ण भक्ति की सर्वोच्चता और सभी प्राणियों के साथ अपने प्रेमपूर्ण संबंध को प्रकट करते हैं।',
+            teachings: 'भक्ति ईश्वर तक का सबसे सीधा मार्ग है, जो सभी के लिए सुलभ है।'
+          },
+          10: {
+            name: 'अध्याय 10: विभूति योग',
+            dialogue: [
+              { speaker: 'Arjuna', text: 'आपके दैवीय वैभव को कैसे जानूँ?' },
+              { speaker: 'Krishna', text: 'मैं सभी का स्रोत हूँ; मेरे ऐश्वर्य को जानो।' },
+              { speaker: 'Arjuna', text: 'आपके दैवीय प्रकट रूप क्या हैं?' },
+              { speaker: 'Krishna', text: 'मैं तेजस्वियों में सूर्य, पशुओं में सिंह हूँ।' },
+              { speaker: 'Arjuna', text: 'आप इस तरह क्यों प्रकट होते हैं?' },
+              { speaker: 'Krishna', text: 'भक्ति प्रेरित करने और धर्म स्थापित करने के लिए।' },
+              { speaker: 'Arjuna', text: 'आपके और वैभव का वर्णन करें।' },
+              { speaker: 'Krishna', text: 'मैं सृष्टि का आदि, मध्य, और अंत हूँ।' },
+              { speaker: 'Arjuna', text: 'आप पर ध्यान कैसे करूँ?' },
+              { speaker: 'Krishna', text: 'मुझे सभी प्राणियों और घटनाओं में देखो।' },
+              { speaker: 'Arjuna', text: 'आपकी उपस्थिति का विस्तार क्या है?' },
+              { speaker: 'Krishna', text: 'मेरे बाहर कुछ भी नहीं; सब मुझमें समाहित है।' }
+            ],
+            summary: 'कृष्ण सृष्टि में अपने दैवीय प्रकट रूपों का वर्णन करते हैं।',
+            teachings: 'ईश्वर का ऐश्वर्य सभी सृष्टि में दिखाई देता है, जो भक्ति को प्रेरित करता है।'
+          },
+          11: {
+            name: 'अध्याय 11: विश्वरूप दर्शन योग',
+            dialogue: [
+              { speaker: 'Arjuna', text: 'क्या मैं आपका विश्वरूप देख सकता हूँ?' },
+              { speaker: 'Krishna', text: 'मेरे विश्वरूप को दैवीय नेत्रों से देखो।' },
+              { speaker: 'Arjuna', text: 'मैं स्तब्ध हूँ! यह रूप क्या है?' },
+              { speaker: 'Krishna', text: 'मैं काल हूँ, सभी विश्वों का संहारक।' },
+              { speaker: 'Arjuna', text: 'मैं सभी प्राणियों को आपमें क्यों देखता हूँ?' },
+              { speaker: 'Krishna', text: 'सारी सृष्टि मुझमें समाहित है; मैं परम हूँ।' },
+              { speaker: 'Arjuna', text: 'मुझे भय लग रहा है; अपना सौम्य रूप दिखाएँ।' },
+              { speaker: 'Krishna', text: 'अर्जुन, मेरे मानव रूप में लौटो; शांत हो।' },
+              { speaker: 'Arjuna', text: 'यह रूप कौन देख सकता है?' },
+              { speaker: 'Krishna', text: 'मेरे प्रति अटल भक्ति से।' },
+              { speaker: 'Arjuna', text: 'इसका दर्शन करने का लाभ क्या है?' },
+              { speaker: 'Krishna', text: 'यह भक्ति को गहरा करता है और दैवीय दृष्टि देता है।' }
+            ],
+            summary: 'कृष्ण अर्जुन को दैवीय दृष्टि देकर अपने विश्वरूप का दर्शन कराते हैं, अपनी सर्वोच्च शक्ति को प्रकट करते हुए।',
+            teachings: 'ईश्वर का विश्वरूप सभी सृष्टि को समेटता है, जो भक्ति से देखा जाता है।'
+          },
+          12: {
+            name: 'अध्याय 12: भक्ति योग',
+            dialogue: [
+              { speaker: 'Arjuna', text: 'साकार या निराकार भक्त कौन प्रिय है?' },
+              { speaker: 'Krishna', text: 'जो भक्ति से मेरी पूजा करते हैं, वे मुझे प्रिय हैं।' },
+              { speaker: 'Arjuna', text: 'भक्ति का अभ्यास कैसे करूँ?' },
+              { speaker: 'Krishna', text: 'मुझ पर मन लगाओ या सभी कर्म मुझे समर्पित करो।' },
+              { speaker: 'Arjuna', text: 'यदि मैं मन केंद्रित न कर सकूँ?' },
+              { speaker: 'Krishna', text: 'निष्काम कर्म करो या मेरा नाम जपो।' },
+              { speaker: 'Arjuna', text: 'भक्त के गुण क्या हैं?' },
+              { speaker: 'Krishna', text: 'वे दयालु, समदृष्टि, और मेरे प्रति समर्पित हैं।' },
+              { speaker: 'Arjuna', text: 'क्या भक्ति अन्य मार्गों से श्रेष्ठ है?' },
+              { speaker: 'Krishna', text: 'हाँ, यह सबसे सरल और सीधा मार्ग है।' },
+              { speaker: 'Arjuna', text: 'क्या सभी इस मार्ग का पालन कर सकते हैं?' },
+              { speaker: 'Krishna', text: 'विश्वास के साथ कोई भी भक्ति से मुझे प्राप्त कर सकता है।' }
+            ],
+            summary: 'कृष्ण भक्तों के गुणों और भक्ति की सर्वोच्चता का वर्णन करते हैं।',
+            teachings: 'प्रेमपूर्ण भक्ति सभी मार्गों से ऊपर है और सभी के लिए सुलभ है।'
+          },
+          13: {
+            name: 'अध्याय 13: क्षेत्र क्षेत्रज्ञ विभाग योग',
+            dialogue: [
+              { speaker: 'Arjuna', text: 'क्षेत्र और क्षेत्रज्ञ क्या है?' },
+              { speaker: 'Krishna', text: 'शरीर क्षेत्र है; आत्मा क्षेत्रज्ञ है।' },
+              { speaker: 'Arjuna', text: 'परमात्मा क्या है?' },
+              { speaker: 'Krishna', text: 'मैं परमात्मा हूँ, सभी के हृदय में निवास करता हूँ।' },
+              { speaker: 'Arjuna', text: 'क्षेत्र को कैसे जानूँ?' },
+              { speaker: 'Krishna', text: 'विनम्रता, वैराग्य, और अनुशासन से।' },
+              { speaker: 'Arjuna', text: 'सच्चा ज्ञान क्या है?' },
+              { speaker: 'Krishna', text: 'शरीर और आत्मा के बीच अंतर को समझना।' },
+              { speaker: 'Arjuna', text: 'आत्मा को शरीर से क्या बाँधता है?' },
+              { speaker: 'Krishna', text: 'प्रकृति के गुणों से आसक्ति।' },
+              { speaker: 'Arjuna', text: 'इसे कैसे पार करूँ?' },
+              { speaker: 'Krishna', text: 'भक्ति से परमात्मा को समझो।' }
+            ],
+            summary: 'कृष्ण शरीर, आत्मा, और परमात्मा के बीच अंतर को समझाते हैं।',
+            teachings: 'सच्चा ज्ञान आत्मा को शरीर से अलग देखता है, जो भक्ति से प्राप्त होता है।'
+          },
+          14: {
+            name: 'अध्याय 14: गुणत्रय विभाग योग',
+            dialogue: [
+              { speaker: 'Arjuna', text: 'प्रकृति के गुण क्या हैं?' },
+              { speaker: 'Krishna', text: 'सत्त्व, रजस, और तमस आत्मा को बाँधते हैं।' },
+              { speaker: 'Arjuna', text: 'ये गुण हमें कैसे प्रभावित करते हैं?' },
+              { speaker: 'Krishna', text: 'सत्त्व उन्नति देता है, रजस बाँधता है, तमस भ्रमित करता है।' },
+              { speaker: 'Arjuna', text: 'इन गुणों से कैसे पार पाऊँ?' },
+              { speaker: 'Krishna', text: 'मेरी भक्ति से तुम इनसे ऊपर उठोगे।' },
+              { speaker: 'Arjuna', text: 'पारगमन के लक्षण क्या हैं?' },
+              { speaker: 'Krishna', text: 'सभी परिस्थितियों में समता।' },
+              { speaker: 'Arjuna', text: 'गुण कर्मों को कैसे प्रभावित करते हैं?' },
+              { speaker: 'Krishna', text: 'वे इच्छा, कर्म, और परिणाम को आकार देते हैं।' },
+              { speaker: 'Arjuna', text: 'सत्त्व में कर्म कैसे करूँ?' },
+              { speaker: 'Krishna', text: 'निष्काम कर्म करो, मुझे समर्पित होकर।' }
+            ],
+            summary: 'कृष्ण प्रकृति के तीन गुणों और उनके प्रभावों की व्याख्या करते हैं।',
+            teachings: 'भक्ति से गुणों को पार करना मुक्ति की ओर ले जाता है।'
+          },
+          15: {
+            name: 'अध्याय 15: पुरुषोत्तम योग',
+            dialogue: [
+              { speaker: 'Arjuna', text: 'इस संसार की प्रकृति क्या है?' },
+              { speaker: 'Krishna', text: 'यह उल्टा बरगद का पेड़ है, जिसकी जड़ें मुझमें हैं।' },
+              { speaker: 'Arjuna', text: 'इससे वैराग्य कैसे प्राप्त करूँ?' },
+              { speaker: 'Krishna', text: 'वैराग्य की कुल्हाड़ी से इस पेड़ को काटो।' },
+              { speaker: 'Arjuna', text: 'पुरुषोत्तम कौन है?' },
+              { speaker: 'Krishna', text: 'मैं पुरुषोत्तम हूँ, नश्वर से परे।' },
+              { speaker: 'Arjuna', text: 'आप तक कैसे पहुँचूँ?' },
+              { speaker: 'Krishna', text: 'अटल भक्ति के साथ मुझे समर्पित हो।' },
+              { speaker: 'Arjuna', text: 'दो प्रकार के प्राणी कौन हैं?' },
+              { speaker: 'Krishna', text: 'नश्वर आत्माएँ और अनंत परमात्मा।' },
+              { speaker: 'Arjuna', text: 'यह ज्ञान सर्वोच्च क्यों है?' },
+              { speaker: 'Krishna', text: 'यह मुक्ति और मेरे साथ एकता की ओर ले जाता है।' }
+            ],
+            summary: 'कृष्ण संसार की मायावी प्रकृति को उल्टे बरगद के पेड़ के रूपक से समझाते हैं।',
+            teachings: 'भौतिक से वैराग्य और परम पुरुष को समर्पण मुक्ति देता है।'
+          },
+          16: {
+            name: 'अध्याय 16: दैवासुर संपद् विभाग योग',
+            dialogue: [
+              { speaker: 'Arjuna', text: 'दैवीय गुण क्या हैं?' },
+              { speaker: 'Krishna', text: 'निडरता, शुद्धता, और भक्ति मुक्ति की ओर ले जाते हैं।' },
+              { speaker: 'Arjuna', text: 'आसुरी गुण क्या हैं?' },
+              { speaker: 'Krishna', text: 'अहंकार, क्रोध, और अज्ञान बंधन की ओर ले जाते हैं।' },
+              { speaker: 'Arjuna', text: 'ये गुण कैसे प्रकट होते हैं?' },
+              { speaker: 'Krishna', text: 'दैवीय मुझे खोजते हैं; आसुरी स्वार्थी इच्छाओं का पीछा करते हैं।' },
+              { speaker: 'Arjuna', text: 'आसुरी लोगों का क्या होता है?' },
+              { speaker: 'Krishna', text: 'वे निम्न अवस्थाओं में गिरते हैं।' },
+              { speaker: 'Arjuna', text: 'दैवीय गुण कैसे विकसित करूँ?' },
+              { speaker: 'Krishna', text: 'शास्त्रों का पालन करो और भक्ति का अभ्यास करो।' },
+              { speaker: 'Arjuna', text: 'कुछ लोग आसुरी मार्ग क्यों चुनते हैं?' },
+              { speaker: 'Krishna', text: 'अज्ञान और माया उनकी समझ को ढक लेती है।' }
+            ],
+            summary: 'कृष्ण दैवीय और आसुरी स्वभावों और उनके परिणामों का तुलनात्मक वर्णन करते हैं।',
+            teachings: 'दैवीय गुण मुक्ति की ओर ले जाते हैं; आसुरी बंधन की ओर।'
+          },
+          17: {
+            name: 'अध्याय 17: श्रद्धात्रय विभाग योग',
+            dialogue: [
+              { speaker: 'Arjuna', text: 'शास्त्रों के बिना श्रद्धा क्या है?' },
+              { speaker: 'Krishna', text: 'यह प्रकृति के तीन गुणों से आकार लेती है।' },
+              { speaker: 'Arjuna', text: 'गुण श्रद्धा को कैसे प्रभावित करते हैं?' },
+              { speaker: 'Krishna', text: 'सत्त्व शुद्धता, रजस इच्छा, तमस भ्रम की ओर ले जाता है।' },
+              { speaker: 'Arjuna', text: 'सत्त्व में कर्म क्या हैं?' },
+              { speaker: 'Krishna', text: 'निष्काम पूजा, दान, और तप।' },
+              { speaker: 'Arjuna', text: 'रजस में कर्म क्या हैं?' },
+              { speaker: 'Krishna', text: 'वे फल की इच्छा से किए जाते हैं और अस्थायी हैं।' },
+              { speaker: 'Arjuna', text: 'तमस में कर्म क्या हैं?' },
+              { speaker: 'Krishna', text: 'वे हानिकारक हैं और बुद्धिहीन हैं।' },
+              { speaker: 'Arjuna', text: 'सत्त्व में कर्म कैसे करूँ?' },
+              { speaker: 'Krishna', text: 'शास्त्रों और भक्ति के साथ अपनी श्रद्धा को संरेखित करो।' }
+            ],
+            summary: 'कृष्ण तीन गुणों के आधार पर श्रद्धा और प्रथाओं को वर्गीकृत करते हैं।',
+            teachings: 'सत्त्व में श्रद्धा शास्त्रों के पालन से आत्मा को उन्नत करती है।'
+          },
+          18: {
+            name: 'अध्याय 18: मोक्ष संन्यास योग',
+            dialogue: [
+              { speaker: 'Arjuna', text: 'सच्चा संन्यास क्या है?' },
+              { speaker: 'Krishna', text: 'स्वार्थी कर्मों का त्याग, कर्तव्य का नहीं।' },
+              { speaker: 'Arjuna', text: 'कर्म को क्या प्रेरित करता है?' },
+              { speaker: 'Krishna', text: 'ज्ञान, कर्ता, और इच्छा कर्मों को प्रेरित करते हैं।' },
+              { speaker: 'Arjuna', text: 'मैं सही कर्म कैसे करूँ?' },
+              { speaker: 'Krishna', text: 'अपने स्वभाव के अनुसार कर्म करो, मेरे मार्गदर्शन में।' },
+              { speaker: 'Arjuna', text: 'मुक्ति की ओर क्या ले जाता है?' },
+              { speaker: 'Krishna', text: 'मुझे सभी कर्म भक्ति के साथ समर्पित करो।' },
+              { speaker: 'Arjuna', text: 'यदि मुझे आपके वचनों पर संदेह हो?' },
+              { speaker: 'Krishna', text: 'मेरी शिक्षाओं पर चिंतन करो और विश्वास के साथ कर्म करो।' },
+              { speaker: 'Arjuna', text: 'मेरा कर्तव्य अब क्या है?' },
+              { speaker: 'Krishna', text: 'सभी संदेह त्यागकर मुझे पूर्ण रूप से समर्पित हो जाओ।' }
+            ],
+            summary: 'कृष्ण सभी शिक्षाओं का सार देते हैं, अर्जुन को दैवीय इच्छा के प्रति समर्पण करने का आग्रह करते हैं।',
+            teachings: 'ईश्वर को समर्पण निष्काम कर्म और भक्ति के माध्यम से मुक्ति देता है।'
+          }
+        }
+      }
+    };
+
+        // Initialize state
+        let currentLang = 'en';
+        let currentDialogueIndex = 0;
+        let currentChapter = null;
+
+        // Update UI based on language
+        function updateUI() {
+            const langData = data[currentLang];
+            document.getElementById('headerTitle').textContent = langData.headerTitle;
+            document.getElementById('dialogueTitle').textContent = langData.dialogueTitle;
+            document.getElementById('krishnaName').textContent = langData.krishnaName;
+            document.getElementById('arjunaName').textContent = langData.arjunaName;
+            document.getElementById('playAudioBtn').textContent = langData.playAudioBtn;
+            document.getElementById('askQuestionBtn').textContent = langData.askQuestionBtn;
+            document.getElementById('answerBtn').textContent = langData.answerBtn;
+
+            // Update chapter dropdown
+            const chapterSelect = document.getElementById('chapterSelect');
+            const selectedChapter = chapterSelect.value;
+            chapterSelect.innerHTML = `<option value="">${currentLang === 'en' ? 'Select a Chapter' : 'एक अध्याय चुनें'}</option>`;
+            for (let i = 1; i <= 18; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = langData.chapters[i].name;
+                if (i == selectedChapter) option.selected = true;
+                chapterSelect.appendChild(option);
+            }
+
+            // Reset Q&A state
+            if (selectedChapter) {
+                currentChapter = selectedChapter;
+                currentDialogueIndex = 0;
+                displayChapter(selectedChapter);
+                document.getElementById('askQuestionBtn').disabled = false;
+                document.getElementById('answerBtn').disabled = true;
+            } else {
+                document.getElementById('conversation').textContent = currentLang === 'en' ?
+                    'Select a chapter to start the Q&A between Krishna and Arjuna.' :
+                    'कृष्ण और अर्जुन के बीच प्रश्नोत्तर शुरू करने के लिए एक अध्याय चुनें।';
+                document.getElementById('askQuestionBtn').disabled = true;
+                document.getElementById('answerBtn').disabled = true;
+            }
+        }
+
+        // Initialize chapter for Q&A
+        function displayChapter(chapter) {
+            currentChapter = chapter;
+            currentDialogueIndex = 0;
+            const conversationDiv = document.getElementById('conversation');
+            conversationDiv.innerHTML = ''; // Clear conversation div
+            document.getElementById('askQuestionBtn').disabled = false;
+            document.getElementById('answerBtn').disabled = true;
+        }
+        // Handle Ask Question button
+        function askQuestion() {
+          if (!currentChapter || currentDialogueIndex >= data[currentLang].chapters[currentChapter].dialogue.length) {
+            document.getElementById('askQuestionBtn').disabled = true;
+            return;
+          }
+          const conversationDiv = document.getElementById('conversation');
+          conversationDiv.innerHTML = ''; // Clear previous content
+          const dialogue = data[currentLang].chapters[currentChapter].dialogue[currentDialogueIndex];
+          if (dialogue.speaker === 'Arjuna') {
+            const p = document.createElement('p');
+            p.className = 'dialogue-item slide-in arjuna-glow';
+            p.innerHTML = `<span class="speaker">${data[currentLang].arjunaName}: </span>${dialogue.text}`;
+            p.dataset.text = dialogue.text; // Store text for audio
+            conversationDiv.appendChild(p);
+            // Enlarge Arjuna's image
+            const arjunaImg = document.getElementById('arjunaImg');
+            const krishnaImg = document.getElementById('krishnaImg');
+            arjunaImg.classList.add('enlarge');
+            krishnaImg.classList.remove('enlarge');
+        // Disable Ask Question, enable Answer
+            document.getElementById('askQuestionBtn').disabled = true;
+            document.getElementById('answerBtn').disabled = false;
+        // Scroll to bottom
+            conversationDiv.scrollTop = conversationDiv.scrollHeight;
+        // Move to next dialogue (Krishna's answer)
+            currentDialogueIndex++;
+          }
+        }
+        // Handle Answer button
+        function answerQuestion() {
+    if (!currentChapter || currentDialogueIndex >= data[currentLang].chapters[currentChapter].dialogue.length) {
+        document.getElementById('answerBtn').disabled = true;
+        return;
+    }
+
+    const conversationDiv = document.getElementById('conversation');
+    conversationDiv.innerHTML = ''; // Clear previous content
+    const dialogue = data[currentLang].chapters[currentChapter].dialogue[currentDialogueIndex];
+    if (dialogue.speaker === 'Krishna') {
+        const p = document.createElement('p');
+        p.className = 'dialogue-item slide-in krishna-glow';
+        p.innerHTML = `<span class="speaker">${data[currentLang].krishnaName}: </span>${dialogue.text}`;
+        p.dataset.text = dialogue.text; // Store text for audio
+        conversationDiv.appendChild(p);
+
+        // Enlarge Krishna's image
+        const krishnaImg = document.getElementById('krishnaImg');
+        const arjunaImg = document.getElementById('arjunaImg');
+        krishnaImg.classList.add('enlarge');
+        arjunaImg.classList.remove('enlarge');
+
+        // Move to next dialogue (Arjuna's question)
+        currentDialogueIndex++;
+
+        // Check if all dialogues are exhausted
+        if (currentDialogueIndex >= data[currentLang].chapters[currentChapter].dialogue.length) {
+            document.getElementById('askQuestionBtn').disabled = true;
+            document.getElementById('answerBtn').disabled = true;
+
+            // Display summary
+            const langData = data[currentLang].chapters[currentChapter];
+            const summaryTitle = document.createElement('div');
+            summaryTitle.className = 'text-lg font-semibold mt-6';
+            summaryTitle.textContent = data[currentLang].summaryTitle;
+            conversationDiv.appendChild(summaryTitle);
+            const summary = document.createElement('p');
+            summary.className = 'mt-2';
+            summary.textContent = langData.summary;
+            conversationDiv.appendChild(summary);
+
+            // Display teachings
+            const teachingsTitle = document.createElement('div');
+            teachingsTitle.className = 'text-lg font-semibold mt-6';
+            teachingsTitle.textContent = data[currentLang].teachingsTitle;
+            conversationDiv.appendChild(teachingsTitle);
+            const teachings = document.createElement('p');
+            teachings.className = 'mt-2';
+            teachings.textContent = langData.teachings;
+            conversationDiv.appendChild(teachings);
+        } else {
+            document.getElementById('askQuestionBtn').disabled = false;
+            document.getElementById('answerBtn').disabled = true;
+        }
+
+        // Scroll to bottom
+        conversationDiv.scrollTop = conversationDiv.scrollHeight;
+    }
+}
+        // Text-to-Speech functionality
+        let speech = null;
+        function playAudio() {
+    if (speech) {
+        window.speechSynthesis.cancel();
+        speech = null;
+    }
+
+    const conversationDiv = document.getElementById('conversation');
+    const dialogue = conversationDiv.querySelector('.dialogue-item');
+    if (!dialogue) {
+        console.error('No dialogue found to play audio');
+        return;
+    }
+
+    const text = dialogue.dataset.text; // Get text without speaker name
+    const isKrishna = dialogue.classList.contains('krishna-glow');
+    speech = new SpeechSynthesisUtterance(text);
+    speech.lang = currentLang === 'hi' ? 'hi-IN' : 'en-US';
+    speech.volume = 1;
+    speech.rate = 1;
+    speech.pitch = isKrishna ? 0.7 : 1.1; // Krishna: deep; Arjuna: clear
+
+    let voices = window.speechSynthesis.getVoices();
+    console.log('Available voices:', voices.map(v => ({ name: v.name, lang: v.lang })));
+
+    let selectedVoice = null;
+    if (currentLang === 'hi') {
+        // Try Hindi voices first
+        selectedVoice = voices.find(v => 
+            v.lang === 'hi-IN' && 
+            (v.name.includes('Google हिन्दी') || v.name.includes('Microsoft')) &&
+            !v.name.toLowerCase().includes('female') &&
+            !v.name.toLowerCase().includes('heera') // Exclude known female voice
+        ) || voices.find(v => v.name.includes('Google Hindi Male')); // Explicit male Hindi
+        if (!selectedVoice) {
+            console.warn('No Hindi male voice found. Testing Google हिन्दी...');
+            selectedVoice = voices.find(v => v.name === 'Google हिन्दी');
+            if (selectedVoice) {
+                console.log('Using Google हिन्दी for testing. Please confirm if male or functional.');
+            } else {
+                // Fallback to male English voice
+                selectedVoice = voices.find(v => 
+                    v.name === 'Microsoft Ravi' || // en-IN, male
+                    v.name === 'Microsoft David' || // en-US, male
+                    v.name === 'Microsoft Mark' // en-US, male
+                ) || voices.find(v => v.lang.includes('en')) || voices[0];
+                console.warn('No Hindi voice available; using English male voice for Hindi text. Pronunciation may be non-native.');
+            }
+        }
+    } else {
+        // English: Use male English voice
+        selectedVoice = voices.find(v => 
+            v.name === 'Microsoft David' || // en-US, male
+            v.name === 'Microsoft Ravi' || // en-IN, male
+            v.name === 'Microsoft Mark' // en-US, male
+        ) || voices.find(v => v.lang.includes('en')) || voices[0];
+    }
+
+    if (!selectedVoice) {
+        console.error('No voice selected; defaulting to first available voice.');
+        selectedVoice = voices[0];
+    }
+    console.log('Selected voice:', selectedVoice ? { name: selectedVoice.name, lang: selectedVoice.lang } : 'No voice selected');
+    speech.voice = selectedVoice;
+
+    // Clear any pending or speaking synthesis
+    if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
+        window.speechSynthesis.cancel();
+    }
+
+    // Error handling
+    speech.onerror = (event) => {
+        console.error('Speech synthesis error:', event.error, 'Voice:', selectedVoice ? selectedVoice.name : 'None');
+        if (selectedVoice.name !== 'Microsoft David' && event.error !== 'interrupted') {
+            window.speechSynthesis.cancel();
+            selectedVoice = voices.find(v => v.name === 'Microsoft David') || voices[0];
+            console.log('Falling back to voice:', selectedVoice ? { name: selectedVoice.name, lang: selectedVoice.lang } : 'No fallback');
+            speech = new SpeechSynthesisUtterance(text);
+            speech.lang = currentLang === 'hi' ? 'hi-IN' : 'en-US';
+            speech.volume = 1;
+            speech.rate = 1;
+            speech.pitch = isKrishna ? 0.7 : 1.1;
+            speech.voice = selectedVoice;
+            window.speechSynthesis.speak(speech);
+        } else if (event.error === 'interrupted') {
+            console.warn('Speech interrupted. Retrying...');
+            window.speechSynthesis.cancel();
+            window.speechSynthesis.speak(speech);
+        }
+    };
+
+    if (voices.length === 0) {
+        window.speechSynthesis.onvoiceschanged = () => {
+            voices = window.speechSynthesis.getVoices();
+            console.log('Available voices after change:', voices.map(v => ({ name: v.name, lang: v.lang })));
+            selectedVoice = currentLang === 'hi' ? 
+                (voices.find(v => 
+                    v.lang === 'hi-IN' && 
+                    (v.name.includes('Google हिन्दी') || v.name.includes('Microsoft')) &&
+                    !v.name.toLowerCase().includes('female') &&
+                    !v.name.toLowerCase().includes('heera')
+                ) || voices.find(v => v.name.includes('Google Hindi Male')) ||
+                  voices.find(v => v.name === 'Google हिन्दी') ||
+                  voices.find(v => 
+                      v.name === 'Microsoft Ravi' ||
+                      v.name === 'Microsoft David' ||
+                      v.name === 'Microsoft Mark'
+                  ) || voices[0]) :
+                (voices.find(v => 
+                    v.name === 'Microsoft David' ||
+                    v.name === 'Microsoft Ravi' ||
+                    v.name === 'Microsoft Mark'
+                ) || voices[0]);
+            if (!selectedVoice) {
+                selectedVoice = voices[0];
+                console.error('No voice selected in onvoiceschanged; using first voice.');
+            }
+            console.log('Selected voice after change:', selectedVoice ? { name: selectedVoice.name, lang: selectedVoice.lang } : 'No voice');
+            speech = new SpeechSynthesisUtterance(text);
+            speech.lang = currentLang === 'hi' ? 'hi-IN' : 'en-US';
+            speech.volume = 1;
+            speech.rate = 1;
+            speech.pitch = isKrishna ? 0.7 : 1.1;
+            speech.voice = selectedVoice;
+            speech.onerror = (event) => {
+                console.error('Speech synthesis error after voice change:', event.error, 'Voice:', selectedVoice ? selectedVoice.name : 'None');
+            };
+            window.speechSynthesis.cancel();
+            window.speechSynthesis.speak(speech);
+        };
+    } else {
+        window.speechSynthesis.speak(speech);
+    }
+}
+
+        function stopAudio() {
+            if (speech) {
+                window.speechSynthesis.cancel();
+                speech = null;
+            }
+        }
+
+        // Event listeners
+        document.getElementById('langEnglish').addEventListener('click', () => {
+            currentLang = 'en';
+            updateUI();
+        });
+
+        document.getElementById('langHindi').addEventListener('click', () => {
+            currentLang = 'hi';
+            updateUI();
+        });
+
+        document.getElementById('chapterSelect').addEventListener('change', (e) => {
+            const chapter = e.target.value;
+            if (chapter) {
+                displayChapter(chapter);
+            } else {
+                document.getElementById('conversation').textContent = currentLang === 'en' ?
+                    'Select a chapter to start the Q&A between Krishna and Arjuna.' :
+                    'कृष्ण और अर्जुन के बीच प्रश्नोत्तर शुरू करने के लिए एक अध्याय चुनें।';
+                document.getElementById('askQuestionBtn').disabled = true;
+                document.getElementById('answerBtn').disabled = true;
+                const krishnaImg = document.getElementById('krishnaImg');
+                const arjunaImg = document.getElementById('arjunaImg');
+                krishnaImg.classList.remove('enlarge');
+                arjunaImg.classList.remove('enlarge');
+            }
+        });
+
+        document.getElementById('askQuestionBtn').addEventListener('click', askQuestion);
+        document.getElementById('answerBtn').addEventListener('click', answerQuestion);
+
+        // Initialize UI
+        updateUI();
+    </script>
+</body>
+</html>
